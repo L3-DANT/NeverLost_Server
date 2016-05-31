@@ -7,6 +7,10 @@ import java.util.Date;
 import javax.ws.rs.Produces;
 
 import org.bson.Document;
+import org.dant.beans.JsonConnectionBean;
+import org.dant.beans.JsonSessionToken;
+import org.dant.beans.User;
+import org.dant.db.DAOUserImpl;
 //import org.dant.json.JsonConnectionBean;
 //import org.dant.json.JsonSessionToken;
 //import org.dant.beans.User;
@@ -48,14 +52,14 @@ public class TestDAOUser extends TestCase{
 	
 	@Test
 	public void testCreateUserSuccess(JsonConnectionBean bean) throws IOException{
-		JsonSessionToken token = imp.createUser(bean);
-		assertNotNull("L'utilisateur a été créée",token);
+		boolean res = imp.createUser(bean,"customString");
+		assertNotNull("L'utilisateur a été créée",res);
 	}
 	
 	@Test
 	public void testCreateUserFailed(JsonConnectionBean bean)throws IOException {
-		JsonSessionToken token = imp.createUser(bean);
-		assertNull("L'utilisateur n'a pas été initialisé",token);
+		boolean res = imp.createUser(bean, "customString");
+		assertNull("L'utilisateur n'a pas été initialisé",res);
 	}
 	
 	@Test

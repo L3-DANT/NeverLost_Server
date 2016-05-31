@@ -17,6 +17,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.bson.Document;
+import org.dant.beans.JsonConnectionBean;
+import org.dant.beans.JsonSessionToken;
+import org.dant.db.DAOUserImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -38,8 +41,8 @@ public class TestUserServices extends TestCase{
 	@Test
 	public void testCreateUser(JsonConnectionBean bean) throws IOException {
 		assertNull("Le token est vide",token);
-		assertEquals("L'utilisateur a été créée",Response.status(200),userDAO.createUser(bean));
-		assertEquals("L'utilisateur n'a pas été créée",Response.status(409),userDAO.createUser(bean));
+		assertEquals("L'utilisateur a été créée",Response.status(200),userDAO.createUser(bean,"customString"));
+		assertEquals("L'utilisateur n'a pas été créée",Response.status(409),userDAO.createUser(bean,"customString"));
 	}
 	
 	@POST
@@ -58,8 +61,8 @@ public class TestUserServices extends TestCase{
 	@Test
 	public void testAddFriend(JsonSessionToken token, @PathParam("emailfriend") String emailfriend){
 		assertNull("le token est vide",token);
-		assertEquals("Votre ami a bien été ajouté",Response.status(200),userDAO.addFriend(token, emailfriend));
-		assertEquals("Nous n'avons pas ajouté l'utilisateur à votre iste d'amis",Response.status(409),userDAO.addFriend(token, emailfriend));	
+		assertEquals("Votre ami a bien été ajouté",Response.status(200),userDAO.addFriend(token.getEmail(), emailfriend));
+		assertEquals("Nous n'avons pas ajouté l'utilisateur à votre iste d'amis",Response.status(409),userDAO.addFriend(token.getEmail(), emailfriend));	
 	}
 	
 	@POST
@@ -68,8 +71,8 @@ public class TestUserServices extends TestCase{
 	@Test
 	public void deleteFriend(JsonSessionToken token, @PathParam("emailfriend") String emailfriend) {
 		assertNull("Le token est vide",token);
-		assertEquals("L'utilisateur a été supprimé de votre liste d'amis",Response.status(200),userDAO.deleteFriend(token, emailfriend));
-		assertEquals("Problème lors de la suppression",Response.status(409),userDAO.deleteFriend(token, emailfriend));
+		assertEquals("L'utilisateur a été supprimé de votre liste d'amis",Response.status(200),userDAO.deleteFriend(token.getEmail(), emailfriend));
+		assertEquals("Problème lors de la suppression",Response.status(409),userDAO.deleteFriend(token.getEmail(), emailfriend));
 	}
 	
 	public static RepeatedTest suite(){
