@@ -49,7 +49,7 @@ public class UserServices {
 		}
 		if (result) {
 			System.out.println("User created : " + bean.getEmail() + ", password : " + bean.getPassword());
-			MailSender.sendEmail(bean.getEmail(), confirmemail);
+			MailSender.sendEmail(bean.getEmail(), confirmemail,0);
 			return Response.ok().build();
 		} else {
 			return Response.status(Response.Status.CONFLICT).entity("User already exist.").build();
@@ -267,5 +267,25 @@ public class UserServices {
 			return Response.ok().build();
 		}
 		return Response.status(Response.Status.NOT_FOUND).entity("No friends LOOOSER").build();
+	}
+	
+	@GET
+	@Path("/reinitpassword/{email}")
+	public Response reinitPassword(@PathParam("email") String email) {
+		boolean res = false;
+		
+		String newPassword = UUID.randomUUID().toString().substring(0, 8);
+
+		try (DAOUserImpl userDAO = new DAOUserImpl()) {
+			res = userDAO.reinitPassword(email, newPassword);
+		} catch (IOException e) {
+
+		}
+		if (res) {
+			MailSender.sendEmail(email, newPassword,1);
+			return Response.ok().build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).entity("Email not found").build();
+		}
 	}
 }

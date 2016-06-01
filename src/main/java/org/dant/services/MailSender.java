@@ -15,7 +15,7 @@ public class MailSender {
 	static Session getMailSession;
 	static MimeMessage generateMailMessage;
 
-	public static void sendEmail(String email, String token) {
+	public static void sendEmail(String email, String token, int check) {
 
 		mailServerProperties = System.getProperties();
 		mailServerProperties.put("mail.smtp.port", "587");
@@ -27,9 +27,13 @@ public class MailSender {
 		try {
 			generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
 			generateMailMessage.setSubject("NEVERLOST LIVE!!!!!!!");
-			String emailBody = "Vous venez de creer le compte sur Neverlost App.<br>"
-					+ "Clickez <a href=\"http://localhost:8080/NeverLost/rest/services/confirmemail?email=" + email
-					+ "&token=" + token + "\">ICI</a> pour confirmer votre email.";
+			String emailBody;
+			if(check == 0){
+				emailBody = "<h1>Confirmation email from Neverlost.</h1><br>"+"<h2>Click <a href=\"http://localhost:8080/NeverLost/rest/services/confirmemail?email="+email+"&token="+token+"\">here</a> to confirm your email.</h2>";
+			}else{
+				emailBody = "<h1>Bonjour " + email + "!</h1>"
+						+ "<br><P>Voici votre nouveau mot de passe : "+token+"</p>" + "</html> ";
+			}
 			generateMailMessage.setContent(emailBody, "text/html");
 
 			Transport transport = getMailSession.getTransport("smtp");
