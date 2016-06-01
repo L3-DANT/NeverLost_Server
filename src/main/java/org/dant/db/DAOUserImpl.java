@@ -7,6 +7,7 @@ import java.util.Date;
 import javax.ws.rs.core.Response;
 
 import org.bson.Document;
+import org.dant.beans.HashPass;
 import org.dant.beans.JsonConnectionBean;
 import org.dant.beans.JsonSessionToken;
 import org.dant.beans.User;
@@ -66,7 +67,7 @@ public class DAOUserImpl implements DAOUser, Closeable {
 		boolean res = false;
 		user = usersCollection.find(new Document("email", bean.getEmail())).first();
 		if (user == null) {
-			usersCollection.insertOne(new Document("email", bean.getEmail()).append("username", bean.getUsername())
+			usersCollection.insertOne(new Document("email", bean.getEmail()).append("username", (!bean.getUsername().equals(""))?bean.getUsername():bean.getEmail())
 					.append("password", bean.getPassword()).append("lon", 0.0)
 					.append("lat", 0.0).append("friends", new ArrayList<Document>()).append("active", false)
 					.append("confirmemail", confirmemail));
@@ -89,6 +90,7 @@ public class DAOUserImpl implements DAOUser, Closeable {
 
 	@Override
 	public boolean updateUser(User bean) {
+		bean.hashPass();
 		UpdateResult res = usersCollection.updateOne(new Document("email", bean.getEmail()),
 				new Document("$set", new Document(Document.parse(gson.toJson(bean)))));
 		return res.getModifiedCount() > 0;
@@ -283,6 +285,13 @@ public class DAOUserImpl implements DAOUser, Closeable {
 				new Document("$set", new Document("lat", lat).append("lon", lon).append("date", date)));
 
 		return updateResult.wasAcknowledged();
+	}
+
+	@Override
+	public boolean reinitPassword(String email, String password) {
+		UpdateResult updateResult = usersCollection.updateOne(new Document("email", email),
+				new Document("$set", new Document("password", HashPass.getHash(password))));
+		return updateResult.getModifiedCount()>0;
 	}
 
 }
