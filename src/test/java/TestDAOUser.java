@@ -7,6 +7,10 @@ import java.util.Date;
 import javax.ws.rs.Produces;
 
 import org.bson.Document;
+import org.dant.beans.JsonConnectionBean;
+import org.dant.beans.JsonSessionToken;
+import org.dant.beans.User;
+import org.dant.db.DAOUserImpl;
 //import org.dant.json.JsonConnectionBean;
 //import org.dant.json.JsonSessionToken;
 //import org.dant.beans.User;
@@ -48,26 +52,26 @@ public class TestDAOUser extends TestCase{
 	
 	@Test
 	public void testCreateUserSuccess(JsonConnectionBean bean) throws IOException{
-		JsonSessionToken token = imp.createUser(bean);
-		assertNotNull("L'utilisateur a été créée",token);
+		boolean res = imp.createUser(bean,"customString");
+		assertNotNull("L'utilisateur a été créée",res);
 	}
 	
 	@Test
 	public void testCreateUserFailed(JsonConnectionBean bean)throws IOException {
-		JsonSessionToken token = imp.createUser(bean);
-		assertNull("L'utilisateur n'a pas été initialisé",token);
+		boolean res = imp.createUser(bean, "customString");
+		assertNull("L'utilisateur n'a pas été initialisé",res);
 	}
 	
-	@Test
-	public void testCheckoutSuccess(JsonSessionToken token) throws IOException{
-		assertTrue("Déconnection Réussie",imp.checkout(token));
-	}
-	
-	@Test
-	public void testCheckoutFailed(JsonSessionToken token) throws IOException{
-		assertFalse("Il y a eu un probllème pendant la déconnexion",imp.checkout(token));
-	}
-	
+//	@Test
+//	public void testCheckoutSuccess(JsonSessionToken token) throws IOException{
+//		assertTrue("Déconnection Réussie",imp.checkout(token));
+//	}
+//	
+//	@Test
+//	public void testCheckoutFailed(JsonSessionToken token) throws IOException{
+//		assertFalse("Il y a eu un probllème pendant la déconnexion",imp.checkout(token));
+//	}
+//	
 	
 	@Test
 	public void testDeleteUserSuccess(JsonSessionToken token) throws IOException{
@@ -82,22 +86,22 @@ public class TestDAOUser extends TestCase{
 	
 	@Test
 	public void testAddFriend(JsonSessionToken token, String friend) throws IOException{
-		assertEquals("Votre ami a bien été ajouté",true,imp.addFriend(token, friend));
+		assertEquals("Votre ami a bien été ajouté",true,imp.addFriend(token.getEmail(), friend));
 	}
 	
 	@Test
 	public void testAddFriendFailed(JsonSessionToken token, String friend)throws IOException{
-		assertEquals("La personne que vous souhaitez ajouter n'existe pas",false,imp.addFriend(token, friend));
+		assertEquals("La personne que vous souhaitez ajouter n'existe pas",false,imp.addFriend(token.getEmail(), friend));
 	}
 	
 	@Test
 	public void testDeleteFriendSuccess (JsonSessionToken token, String friend)throws IOException{
-		assertEquals("Cette personne a été supprimer de vore liste d'amis",true,imp.deleteFriend(token, friend));
+		assertEquals("Cette personne a été supprimer de vore liste d'amis",true,imp.deleteFriend(token.getEmail(), friend));
 	}
 	
 	@Test 
 	void testDeleteFriendsFailed(JsonSessionToken token, String friend)throws IOException{
-		assertEquals("Il ya eu un problème lors de la suppression de l'utilisateur",false,imp.deleteFriend(token,friend));
+		assertEquals("Il ya eu un problème lors de la suppression de l'utilisateur",false,imp.deleteFriend(token.getEmail(),friend));
 	}
 	
 	@Test
@@ -112,11 +116,11 @@ public class TestDAOUser extends TestCase{
 	
 	@Test
 	public void testGetFriendListSucceess(JsonSessionToken token){
-		assertNotNull("La liste de vos amis a bien été récupéré",imp.getFriendList(token));
+		assertNotNull("La liste de vos amis a bien été récupéré",imp.getFriends(token.getEmail()));
 	}
 	@Test
 	public void testGetFriendListVide(JsonSessionToken token){
-		assertTrue("Si t'as pas d'amis, prend un curly",(imp.getFriendList(token)).isEmpty());
+		assertTrue("Si t'as pas d'amis, prend un curly",(imp.getFriends(token.getEmail())).isEmpty());
 	}
 	
 	@Test

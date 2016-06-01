@@ -10,6 +10,9 @@ import javax.ws.rs.core.Response;
 import javax.xml.ws.Endpoint;
 import javax.ws.rs.core.Response;
 
+import org.dant.beans.JsonConnectionBean;
+import org.dant.beans.JsonSessionToken;
+import org.dant.services.AuthenticationEndpoint;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -65,7 +68,7 @@ public class AuthenticationEndPointTest extends TestCase{
 	}
 	
 	public static RepeatedTest suite(){
-		return new RepeatedTest(new TestSuite(AuthenticationEndpointTest.class), 20);
+		return new RepeatedTest(new TestSuite(AuthenticationEndPointTest.class), 20);
 	}
 	public static void main(String[] args){
 		junit.textui.TestRunner.run(suite());

@@ -19,11 +19,11 @@ import junit.extensions.RepeatedTest;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.dant.db.DAOUserImpl;
-import org.dant.json.JsonConnectionBean;
-import org.dant.json.JsonSessionToken;
+import org.dant.beans.JsonConnectionBean;
+import org.dant.beans.JsonSessionToken;
 import org.dant.services.AuthenticationEndpoint;
 import org.junit.Test;
 
-public interface TestAuthenticationEndPoint extends TestCase{
+public class TestAuthenticationEndPoint extends TestCase{
 
 }
