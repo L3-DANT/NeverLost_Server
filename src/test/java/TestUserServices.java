@@ -75,11 +75,11 @@ public class TestUserServices extends TestCase{
 		assertEquals("Problème lors de la suppression",Response.status(409),userDAO.deleteFriend(token.getEmail(), emailfriend));
 	}
 	
-	public static RepeatedTest suite(){
-		return new RepeatedTest(new TestSuite(UserServices.class), 1);
-	}
-	
-	public static void main(String[] args){
-		junit.textui.TestRunner.run(suite());
-	}
+//	public static RepeatedTest suite(){
+//		return new RepeatedTest(new TestSuite(UserServices.class), 1);
+//	}
+//	
+//	public static void main(String[] args){
+//		junit.textui.TestRunner.run(suite());
+//	}
 }
