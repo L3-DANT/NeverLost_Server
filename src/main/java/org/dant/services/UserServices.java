@@ -11,10 +11,12 @@ import java.util.UUID;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -47,12 +49,32 @@ public class UserServices {
 		}
 		if (result) {
 			System.out.println("User created : " + bean.getEmail() + ", password : " + bean.getPassword());
+			MailSender.sendEmail(bean.getEmail(), confirmemail);
 			return Response.ok().build();
 		} else {
 			return Response.status(Response.Status.CONFLICT).entity("User already exist.").build();
 		}
 	}
 
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	@Path("/confirmemail")
+	public String confirmEmail(@QueryParam("email") String email, @QueryParam("token") String token) {
+		boolean res = false;
+		try (DAOUserImpl userDAO = new DAOUserImpl()) {
+			res = userDAO.confirmUser(email, token);
+		} catch (IOException e) {
+			return "<html> " + "<title>" + "Confirm" + "</title>" + "<body><h1>" + "NNNNNNNOOOOOOOONONONONONONONONONONONON!"
+					+ "</body></h1>" + "</html> ";
+		}
+		if (res) {
+			return "<html> " + "<title>" + "Confirm" + "</title>" + "<body><h1>Bonjour " + email + "!</body></h1>"+"<br><h2>Votre email et confirmé.</h2><br><p>Vous pouvez maintenant utiliser votre application.</p>"+"</html> ";
+		} else {
+			return "<html> " + "<title>" + "Confirm" + "</title>"
+					+ "<body><h1>NNNNNNNOOOOOOOONONONONONONONONONONONON</body></h1>" + "</html> ";
+		}
+	}
+	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/updateuser")
