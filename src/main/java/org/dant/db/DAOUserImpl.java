@@ -66,7 +66,7 @@ public class DAOUserImpl implements DAOUser, Closeable {
 		boolean res = false;
 		user = usersCollection.find(new Document("email", bean.getEmail())).first();
 		if (user == null) {
-			usersCollection.insertOne(new Document("email", bean.getEmail()).append("username", bean.getUsername())
+			usersCollection.insertOne(new Document("email", bean.getEmail()).append("username", (!bean.getUsername().equals(""))?bean.getUsername():bean.getEmail())
 					.append("password", bean.getPassword()).append("lon", 0.0)
 					.append("lat", 0.0).append("friends", new ArrayList<Document>()).append("active", false)
 					.append("confirmemail", confirmemail));

@@ -9,9 +9,9 @@ public class JsonConnectionBean implements Serializable {
 	private static final long serialVersionUID = 798241628003365812L;
 	private final String salt = "gdhfg798241628003365812Ldtkqsdaz";
 
-	public String email;
-	public String password;
-	public String username;
+	public String email="";
+	public String password="";
+	public String username="";
 
 	public JsonConnectionBean() {
 	}
